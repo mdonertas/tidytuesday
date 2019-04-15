@@ -17,6 +17,7 @@ She was nice enough to include the raw data as .csv files, where I have included
 library(tidyverse)
 library(ggthemes)
 library(ggrepel)
+library(ggpubr)
 ```
 
 # Get the data
@@ -158,4 +159,35 @@ p_dogs2
 ```{r, echo = F}
 ggsave('./dogs2.pdf', p_dogs2, units = 'cm', height = 10, width = 12)
 ggsave('./dogs2.png', p_dogs2, units = 'cm', height = 10, width = 12)
+```
+
+## Women research
+
+```{r}
+p_women <- women_research %>% 
+    mutate(country = fct_reorder(country, percent_women)) %>%
+    mutate(field = fct_reorder(field, percent_women)) %>%
+    ggplot(aes(y = field, x = country, fill = percent_women)) +
+    geom_tile() +
+    scale_fill_gradient2(midpoint = 0.5, low = '#084594', high = '#99000D', 
+                         mid = 'snow', breaks = c(0,0.5,1), limits = c(0,1)) +
+    theme_economist(base_size = 12) +
+    theme(legend.position = 'right',
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+          axis.text.y = element_text(hjust = 1),
+          panel.grid = element_blank(),
+          axis.ticks = element_blank()) +
+    guides(fill = guide_colorbar('% Women')) +
+    xlab('') + ylab('') +
+    ggtitle('Still a man\'s world', 'Women among researchers with papers published*\n2011-15') +
+    labs(caption = '*Indexed in Scopus\nSources: \'Gender in the Global Research Landscape\' by Elsevier; The Economist\nPlot by @melikedonertas')
+```
+
+```{r, fig.align='centre'}
+p_women
+```
+
+```{r, echo = F}
+ggsave('./women.pdf', p_women, units = 'cm', height = 10, width = 18)
+ggsave('./women.png', p_women, units = 'cm', height = 10, width = 18)
 ```
