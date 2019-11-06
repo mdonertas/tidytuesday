@@ -134,22 +134,23 @@ ggsave('./dogs.png', p_dogs, units = 'cm', height = 10, width = 10)
 
 ```{r}
 p_dogs2 <- dogs %>%
-    # mutate(year = lubridate::ymd(dogs$year, truncated = 2L)) %>%
-    ggplot(aes(x = avg_weight, y = avg_neck, color = year)) +
-    geom_point(size = 2) +
-    geom_path(size = 1,arrow = arrow(length = unit(8,"pt"))) +
-    geom_label(data = filter(dogs, year %in% c(2006, 2015)),
-                     aes(label = year, fill = year), 
-                     color = 'white', nudge_y = -0.2) +
-    theme_economist() +
-    theme(legend.position = 'right') +
-    ggtitle('Fit as a butcher\'s dog','Characteristics of registered with the UK\'s Kennel Club,\naverage when fully grown') +
-    xlab('Weight**, kg') + ylab('Neck Size*, cm') +
-    scale_y_continuous(breaks = 42:44, limits = c(42,44.4)) +
-    scale_x_continuous(breaks = 18:20, limits = c(18,20.6)) +
-    labs(caption = '*Where at least 100 are registered per year\n**Where at least 50 are registered per year\nSources: Kennel Club; The Economist') +
-    scale_color_gradient(low = 'lightsteelblue3', high = 'steelblue4', breaks = c(2006,2015), guide = F) +
-    scale_fill_gradient(low = 'lightsteelblue3', high = 'steelblue4', breaks = c(2006,2015), guide =F)
+  # mutate(year = lubridate::ymd(dogs$year, truncated = 2L)) %>%
+  ggplot(aes(x = avg_weight, y = avg_neck, color = year)) +
+  geom_point(size = 2) +
+  geom_path(size = 1,arrow = arrow(length = unit(8,"pt"))) +
+  geom_label(data = filter(dogs, year %in% c(2006, 2015)),
+             aes(label = year, fill = year),
+             color = 'white', nudge_y = -0.2) +
+  theme_economist() +
+  theme(legend.position = 'right') +
+  ggtitle('Fit as a butcher\'s dog','Characteristics of registered with the UK\'s Kennel Club,\naverage when fully grown') +
+  xlab('Weight**, kg') + ylab('Neck Size*, cm') +
+  scale_y_continuous(breaks = 42:44, limits = c(42,44.4)) +
+  scale_x_continuous(breaks = 18:20, limits = c(18,20.6)) +
+  labs(caption = '*Where at least 100 are registered per year\n**Where at least 50 are registered per year\nSources: Kennel Club; The Economist') +
+  scale_color_gradient(low = 'lightsteelblue3', high = 'steelblue4', breaks = c(2006,2015), guide = F) +
+  scale_fill_gradient(low = 'lightsteelblue3', high = 'steelblue4', breaks = c(2006,2015), guide =F) +
+  coord_fixed(ratio = 100*((max(dogs$avg_neck)-min(dogs$avg_neck))/max(dogs$avg_neck)) / (100*((max(dogs$avg_weight)-min(dogs$avg_weight))/max(dogs$avg_weight))))
 ```
 
 ```{r, fig.align='centre'}
