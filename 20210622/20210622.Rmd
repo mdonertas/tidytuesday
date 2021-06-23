@@ -1,0 +1,67 @@
+---
+title: "Tidy Tuesday - 2021-06-22"
+output: html_notebook
+---
+
+# Tidy Tuesday - 2021-06-22
+
+## Public Park Access
+
+```{r setup}
+library(tidyverse)
+library(ggthemes)
+```
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2021-06-22')$parks
+```
+
+```{r}
+head(tuesdata)
+```
+
+```{r}
+glimpse(tuesdata)
+```
+
+```{r}
+tuesdata = mutate(tuesdata,
+                  park_pct_city_data = as.numeric(gsub('%', '',
+                                                       park_pct_city_data)),
+                  pct_near_park_data = as.numeric(gsub('%', '',
+                                                       pct_near_park_data)),
+                  spend_per_resident_data = as.numeric(gsub('\\$', '',
+                                                spend_per_resident_data))) %>%
+  select(-park_benches,-city_dup)
+```
+
+------------------------------------------------------------------------
+
+```{r}
+tuesdayplot = tuesdata %>%
+  filter(year == 2020) %>%
+  select(city, spend_per_resident_data) %>%
+  unique() %>%
+  top_n(5, spend_per_resident_data) %>%
+  select(city) %>%
+  left_join(tuesdata) %>%
+  ggplot(aes(x = year, y = park_pct_city_data,
+             fill = city)) +
+  geom_line(aes(group = city, color = city)) +
+  geom_point(shape = 21, size = 3) +
+  theme_wsj(base_size = 8) +
+  labs(title = 'Parkland / City',
+       subtitle = 'Top 5 cities - highest spending per resident') +
+  scale_color_wsj() +
+  scale_fill_wsj() +
+  theme(legend.position = 'right', legend.direction = 'vertical') +
+  guides(color = F, fill = guide_legend(title = NULL))
+```
+
+```{r}
+tuesdayplot
+```
+
+```{r}
+ggsave('./20210622/20210622.png', tuesdayplot, units = 'cm', width = 16, height = 10)
+```
